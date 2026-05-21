@@ -1,0 +1,42 @@
+# Publicar CRM MLM en Vercel
+
+## Opcion recomendada
+
+1. Crear una cuenta o iniciar sesion en Vercel.
+2. Subir este proyecto a un repositorio de GitHub.
+3. En Vercel, elegir **Add New Project**.
+4. Importar el repositorio.
+5. Framework preset: **Other**.
+6. Build command: dejar vacio.
+7. Output directory: dejar vacio.
+8. Deploy.
+
+La URL quedara parecida a:
+
+`https://crm-mlm-bienes-raices.vercel.app`
+
+El Panel de Direccion quedara en:
+
+`https://tu-dominio.vercel.app/direccion`
+
+## Importante sobre datos compartidos
+
+Esta version guarda datos en el navegador usando `localStorage`.
+
+Eso significa:
+
+- En una misma computadora se conservan los datos.
+- En otro celular/tablet no se veran automaticamente los mismos datos.
+- Para que Tamara vea en Direccion lo que capturan asesores desde distintos dispositivos, se necesita una base de datos compartida.
+
+La siguiente mejora recomendada es conectar:
+
+- Supabase, Firebase o Airtable como base de datos.
+- Login real por usuario.
+- Roles reales: asesor y directora/admin.
+
+## Proteccion del link
+
+El CRM ya tiene login visual para asesores y Panel de Direccion.
+
+Para proteger todo el sitio desde Vercel, usa **Deployment Protection** en Vercel. La proteccion con password de produccion depende del plan de Vercel.

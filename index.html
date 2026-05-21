@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Panel de Direccion - MLM Bienes Raices</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body data-mode="admin">
+    <section class="login-screen" id="adminLogin">
+      <form class="login-card" id="adminLoginForm">
+        <img src="assets/mlm-logo.png" alt="MLM Bienes Raices" />
+        <p class="eyebrow">Acceso privado</p>
+        <h1>Panel de Direccion</h1>
+        <label>
+          Contrasena
+          <input id="adminPassword" type="password" placeholder="Ingresa la contrasena" autocomplete="current-password" />
+        </label>
+        <p class="login-error" id="loginError" hidden>Contrasena incorrecta.</p>
+        <button class="primary-button">Entrar</button>
+        <a class="secondary-link" href="index.html">Volver al CRM de asesores</a>
+      </form>
+    </section>
+
+    <div class="app-shell locked" id="adminApp">
+      <aside class="sidebar">
+        <div class="brand-box">
+          <div class="logo-frame" id="logoFrame">
+            <img id="brandLogo" src="assets/mlm-logo.png" alt="MLM Bienes Raices" />
+          </div>
+          <div>
+            <button class="logo-button settings-button" id="settingsButton" type="button">⚙️ Configuracion</button>
+            <input id="logoInput" type="file" accept="image/*" hidden />
+          </div>
+        </div>
+        <div>
+          <p class="eyebrow">Direccion</p>
+          <h1>Panel de Direccion</h1>
+        </div>
+        <nav aria-label="Resumen">
+          <button class="nav-item active" data-filter="all">Todos</button>
+          <button class="nav-item" data-filter="Nuevos">Leads nuevos</button>
+          <button class="nav-item" data-filter="En seguimiento">En seguimiento</button>
+          <button class="nav-item" data-filter="Propuestas">Propuestas activas</button>
+          <button class="nav-item" data-filter="Cerrados">Cierres</button>
+          <button class="nav-item alert-nav" data-filter="Sin seguimiento">Sin seguimiento</button>
+        </nav>
+        <a class="direction-link" href="index.html">CRM de asesores</a>
+      </aside>
+
+      <main class="workspace">
+        <section class="topbar" aria-label="Acciones principales">
+          <div>
+            <p class="eyebrow">Supervision MLM</p>
+            <h2>Clientes, asesores y productividad</h2>
+          </div>
+          <div class="topbar-actions">
+            <button class="secondary-button" id="logoutAdmin" type="button">Cerrar sesion</button>
+            <button class="primary-button" id="newClientButton">Nuevo lead</button>
+          </div>
+        </section>
+
+        <section class="metrics" aria-label="Indicadores">
+          <article><span id="totalClients">0</span><p>Leads</p></article>
+          <article><span id="pendingActions">0</span><p>Seguimientos</p></article>
+          <article><span id="openValue">$0</span><p>Presupuesto abierto</p></article>
+          <article><span id="closedClients">0</span><p>Cierres</p></article>
+          <article class="metric-alert"><span id="staleClients">0</span><p>Sin seguimiento</p></article>
+        </section>
+
+        <section class="toolbar" aria-label="Busqueda y filtros">
+          <label class="search-box">
+            <span>Buscar cliente o propiedad</span>
+            <input id="searchInput" type="search" placeholder="Nombre, telefono, zona, propiedad..." />
+          </label>
+          <label>
+            Asesor
+            <select id="advisorFilter">
+              <option value="all">Todos</option>
+            </select>
+          </label>
+          <label>
+            Etapa
+            <select id="statusFilter">
+              <option value="all">Todos</option>
+              <option>Nuevo Lead</option>
+              <option>Interesado</option>
+              <option>Buscando opciones</option>
+              <option>Visita agendada</option>
+              <option>Negociacion</option>
+              <option>Apartado</option>
+              <option>Cierre</option>
+              <option>Perdido</option>
+              <option>Seguimiento futuro</option>
+            </select>
+          </label>
+        </section>
+
+        <section class="advisor-panel" aria-label="Metricas por asesor">
+          <div class="section-heading">
+            <h3>Metricas por asesor</h3>
+            <span>Leads, seguimiento, visitas, propuestas, cierres y alertas</span>
+          </div>
+          <div class="advisor-table" id="advisorTable"></div>
+        </section>
+
+        <section class="activity-panel" aria-label="Actividad reciente">
+          <div class="section-heading">
+            <h3>Actividad reciente</h3>
+            <span>Ultimos movimientos del equipo</span>
+          </div>
+          <div class="activity-list" id="activityList"></div>
+        </section>
+
+        <section class="content-grid">
+          <div>
+            <div class="section-heading">
+              <h3>Clientes por asesor</h3>
+              <span id="clientCount">0 resultados</span>
+            </div>
+            <div class="client-list" id="clientList" aria-live="polite"></div>
+          </div>
+
+          <aside class="detail-panel" id="detailPanel">
+            <p class="empty-state">Selecciona un lead para revisar y reasignar.</p>
+          </aside>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="settingsDialog">
+      <form method="dialog" class="settings-form">
+        <div class="dialog-head">
+          <h2>Configuracion</h2>
+          <button type="button" class="icon-button" id="closeSettings" aria-label="Cerrar">x</button>
+        </div>
+        <div class="settings-grid">
+          <section>
+            <h3>Marca</h3>
+            <button type="button" class="secondary-button" id="changeLogoSetting">Cambiar logo</button>
+            <label>Nombre de empresa<input id="companyNameSetting" placeholder="MLM Bienes Raices" /></label>
+            <label>Colores del CRM<select id="themeSetting"><option value="mlm">MLM rojo y negro</option><option value="light">Claro corporativo</option><option value="dark">Oscuro ejecutivo</option></select></label>
+          </section>
+          <section class="admin-settings">
+            <h3>Asesores</h3>
+            <label>Crear asesor<input id="newAdvisorName" placeholder="Nombre del asesor" /></label>
+            <button type="button" class="secondary-button" id="createAdvisorButton">Crear asesor</button>
+            <div class="advisor-settings-list" id="advisorSettingsList"></div>
+          </section>
+          <section class="admin-settings">
+            <h3>Seguridad</h3>
+            <label>Nueva contrasena direccion<input id="newAdminPassword" type="password" placeholder="Nueva contrasena" /></label>
+            <button type="button" class="secondary-button" id="savePasswordButton">Cambiar contrasena</button>
+          </section>
+          <section>
+            <h3>Seguimiento</h3>
+            <label>Alertar despues de<input id="staleDaysSetting" type="number" min="1" max="30" /> dias sin seguimiento</label>
+            <label>Notificaciones<select id="notificationSetting"><option>Activadas</option><option>Desactivadas</option></select></label>
+          </section>
+        </div>
+        <div class="dialog-actions">
+          <button type="button" class="ghost-button" id="settingsLogout">Cerrar sesion</button>
+          <button class="primary-button">Listo</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog id="clientDialog">
+      <form method="dialog" id="clientForm">
+        <div class="dialog-head">
+          <h2 id="dialogTitle">Nuevo lead</h2>
+          <button type="button" class="icon-button" id="closeDialog" aria-label="Cerrar">x</button>
+        </div>
+        <input type="hidden" id="clientId" />
+        <div class="form-grid">
+          <label>Fecha de creacion<input id="createdAt" type="date" /></label>
+          <label>Nombre<input id="name" required placeholder="Ej. Ana Martinez" /></label>
+          <label>Telefono<input id="phone" placeholder="Ej. 614 123 4567" /></label>
+          <label>Tipo<select id="type"><option>Venta</option><option>Renta</option></select></label>
+          <label>Presupuesto<input id="budget" type="number" min="0" step="10000" placeholder="0" /></label>
+          <label>Zona de interes<input id="zone" placeholder="Ej. Reliz, Canteras, Centro..." /></label>
+          <label>Propiedad enviada<input id="propertySent" placeholder="Ej. Casa Cumbres, depto Centro..." /></label>
+          <label>Fuente del lead<select id="source"><option>TikTok</option><option>Instagram</option><option>Marketplace</option><option>Facebook</option><option>Referido</option><option>WhatsApp</option><option>Pagina web</option><option>Facebook Ads</option><option>Llamada</option><option>Otro</option></select></label>
+          <label>Prioridad<select id="priority"><option>Alta</option><option>Media</option><option>Baja</option></select></label>
+          <label>Ultimo contacto<input id="lastContact" type="date" /></label>
+          <label>Proxima accion<select id="nextAction"><option>Mandar opciones</option><option>Confirmar visita</option><option>Llamar manana</option><option>Esperar respuesta</option><option>Revisar documentos</option><option>Enviar ubicacion</option><option>Dar seguimiento</option><option>Revisar presupuesto</option><option>Agendar cita</option><option>Cerrar negociacion</option></select></label>
+          <label>Proximo seguimiento<input id="followUpDate" type="date" /></label>
+          <label>Etapa<select id="stage"><option>Nuevo Lead</option><option>Interesado</option><option>Buscando opciones</option><option>Visita agendada</option><option>Negociacion</option><option>Apartado</option><option>Cierre</option><option>Perdido</option><option>Seguimiento futuro</option></select></label>
+          <label>Asesor asignado<input id="advisor" placeholder="Ej. Tamara Ortiz" /></label>
+          <label>Estado del cliente<select id="clientStatus"><option>Activo</option><option>Frio</option><option>Perdido</option><option>Cerrado</option><option>Seguimiento futuro</option></select></label>
+        </div>
+        <label>Comentarios<textarea id="comments" rows="4" placeholder="Necesidades, objeciones, acuerdos, detalles de visita o documentos."></textarea></label>
+        <div class="dialog-actions">
+          <button type="button" class="ghost-button" id="deleteClient">Eliminar</button>
+          <div>
+            <button type="button" class="secondary-button" id="cancelDialog">Cancelar</button>
+            <button class="primary-button" id="saveClient">Guardar</button>
+          </div>
+        </div>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
